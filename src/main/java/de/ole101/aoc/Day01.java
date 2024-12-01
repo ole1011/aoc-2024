@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Day 01, Part 1 & 2
@@ -22,10 +25,11 @@ public class Day01 {
 
         System.out.println("Total difference sum: " + sum);
 
+        Map<Integer, Long> rightCountMap = rightList.stream()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
         long similarityScore = leftList.stream()
-                .mapToLong(left -> left * rightList.stream()
-                        .filter(right -> right.equals(left))
-                        .count())
+                .mapToLong(left -> left * rightCountMap.getOrDefault(left, 0L))
                 .sum();
         System.out.println("Total similarity score: " + similarityScore);
     }
